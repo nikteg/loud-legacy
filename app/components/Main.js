@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
-var React = require('react'),
-    Image = require('./Image');
+var React = require('react');
 
 var Main = React.createClass({
     render: function() {

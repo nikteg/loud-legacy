@@ -1,16 +1,17 @@
 body {
     background: #ccc;
+    font-size: 12px;
 }
 
 #header {
     background-image: -webkit-linear-gradient(#35353d, #212124);
     background-image: -o-linear-gradient(#35353d, #212124);
     background-image: linear-gradient(#35353d, #212124);
-    padding: 0.7em 0 0.5em;
+    padding: 0.5em;
     text-shadow: 0 .15em 0.2em rgba(0, 0, 0, 1);
     font-size: 2.5em;
     font-weight: bold;
-    text-align: center;
+    color: white;
 
     .beta {
         color: #e81a7b;
@@ -21,4 +22,48 @@ body {
 
 #content div {
     padding: 4px;
+}
+
+#player {
+    background-image: -webkit-linear-gradient(#35353d, #212124);
+    background-image: -o-linear-gradient(#35353d, #212124);
+    background-image: linear-gradient(#35353d, #212124);
+    position: fixed;
+    padding: 0.5em;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    text-align: center;
+    font-size: 2em;
+    line-height: 0;
+
+    .button {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .component {
+        display: inline-block;
+        padding: 0.3em;
+    }
+
+    .progress {
+        .progress-bar {
+            background: black;
+            width: 256px;
+            height: 0.7em;
+            display: inline-block;
+
+            div {
+                height: 100%;
+                background: red;
+            }
+        }
+
+        .time {
+            display: inline-block;
+            padding: 0 0.3em;
+        }
+    }
 }

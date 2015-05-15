@@ -1,12 +1,13 @@
-var React = require('react/addons');
-var ReactApp = React.createFactory(require('../components/App'));
+var React = require('react');
+var Router = require('react-router');
 
-module.exports = function(app) {
-    app.get('*', function(req, res) {
-        try {
-            res.render('index.ejs', { reactOutput: React.renderToString(ReactApp({ path: req.path })) });
-        } catch (err) {
-            res.render('error.ejs');
-        }
-    });
-};
+var DefaultRoute = Router.DefaultRoute;
+var NotFoundRoute = Router.NotFoundRoute;
+var Route = Router.Route;
+
+var App = require('../components/App');
+
+var routes = module.exports = [
+    <Route path="/" handler={App}>
+    </Route>
+];

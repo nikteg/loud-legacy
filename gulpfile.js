@@ -23,7 +23,7 @@ gulp.task('sass', function() {
 
 gulp.task('react', function() {
     console.log("Reacting...");
-    
+
     browserify('./app/main.js')
         .transform(reactify)
         .bundle()

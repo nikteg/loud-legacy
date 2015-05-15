@@ -1,23 +1,21 @@
 /** @jsx React.DOM */
 
-var React = require('react'),
-    Router = require('react-router-component'),
-    Header = require('./Header'),
-    Main = require('./Main');
+var React = require('react');
+var Header = require('./Header');
+var Player = require('./Player');
+var Main = require('./Main');
 
-var Locations = Router.Locations;
-var Location = Router.Location;
+var RouteHandler = require('react-router').RouteHandler;
 
 var App = React.createClass({
     render: function() {
-        return (
-            <div>
-                <Header />
-                <Locations path={this.props.path} id="content">
-                    <Location path="/" handler={Main} />
-                </Locations>
-            </div>
-        );
+      return (
+          <div>
+              <Header />
+                  <RouteHandler />
+              <Player />
+          </div>
+      );
     }
 });
 

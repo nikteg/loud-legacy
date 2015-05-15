@@ -1,8 +1,10 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
-var ReactApp = React.createFactory(require('./components/App'));
+var React = require('react');
+var Router = require('react-router');
 
-var mountNode = document.getElementById('react');
+var routes = require('./routes/coreRoutes.js');
 
-React.render(new ReactApp({}), mountNode);
+Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+    React.render(<Handler />, document.body);
+});

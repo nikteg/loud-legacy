@@ -1,8 +1,10 @@
-var express = require('express'),
-    favicon = require('serve-favicon'),
-    bodyParser = require('body-parser'),
-    path = require('path');
-    app = express();
+var React = require('react');
+var Router = require('react-router');
+var express = require('express');
+var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
+var path = require('path');
+var app = express();
 
 require('node-jsx').install();
 
@@ -17,6 +19,15 @@ app.use(require('connect-livereload')({ port: 35729 }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
-require(path.join(__dirname, 'app/routes/coreRoutes.js'))(app);
+var routes = require('./app/routes/coreRoutes.js');
+
+app.use(function(req, res, next) {
+    var router = Router.create({ location: req.url, routes: routes });
+    router.run(function(Handler, state) {
+        var html = React.renderToString(React.createElement(Handler));
+
+        return res.render('index', { content: html });
+    });
+});
 
 module.exports = app;
