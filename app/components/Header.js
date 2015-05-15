@@ -1,14 +1,13 @@
 /** @jsx React.DOM */
-var React = require("react");
+
+var React = require('react');
 
 var Header = React.createClass({
-	render: function() {
-		return (
-			<div>
-				<header id="header">I am a</header>
-			</div>
-		);
-	}
+    render: function() {
+        return (
+            <header id="header">Loud<span className="beta">BETA</span></header>
+        );
+    }
 });
 
 module.exports = Header;

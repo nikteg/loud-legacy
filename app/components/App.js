@@ -1,29 +1,24 @@
 /** @jsx React.DOM */
-var React = require("react"),
-	Router = require('react-router-component'),
-	Header = require("./Header"),
-	Taco = require("./Taco");
 
-var Pages = Router.Pages;
-var Page = Router.Page;
+var React = require('react'),
+    Router = require('react-router-component'),
+    Header = require('./Header'),
+    Main = require('./Main');
+
+var Locations = Router.Locations;
+var Location = Router.Location;
 
 var App = React.createClass({
-	render: function() {
-		return (
-			<html>
-				<head>
-					<title></title>
-					<link rel="stylesheet" href="/css/normalize.css" />
-					<link rel="stylesheet" href="/css/main.css" />
-					<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-				</head>
-				<Pages path={this.props.path}>
-				<Page path="/" handler={Taco} />
-				<Page path="/header" handler={Header} />
-				</Pages>
-			</html>
-		);
-	}
+    render: function() {
+        return (
+            <div>
+                <Header />
+                <Locations path={this.props.path} id="content">
+                    <Location path="/" handler={Main} />
+                </Locations>
+            </div>
+        );
+    }
 });
 
 module.exports = App;
