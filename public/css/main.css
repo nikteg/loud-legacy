@@ -1,6 +1,7 @@
 body {
-  background: #ccc;
-  font-size: 12px; }
+  font: 14px/1.5em 'Roboto', sans-serif;
+  background-image: radial-gradient(circle at top center, #e81a7b, #f06d06);
+  padding-bottom: 4.6em; }
 
 #header {
   background-image: -webkit-linear-gradient(#35353d, #212124);
@@ -10,14 +11,21 @@ body {
   text-shadow: 0 .15em 0.2em black;
   font-size: 2.5em;
   font-weight: bold;
-  color: white; }
+  color: white;
+  text-align: center;
+  text-transform: uppercase; }
   #header .beta {
     color: #e81a7b;
     font-size: 0.5em;
     vertical-align: super; }
 
-#content div {
-  padding: 4px; }
+#content {
+  background: white;
+  box-shadow: 0 1em 2em rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 1em;
+  margin: 1em auto;
+  width: 960px; }
 
 #player {
   background-image: -webkit-linear-gradient(#35353d, #212124);
@@ -28,24 +36,64 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  color: white;
+  color: #ddd;
   text-align: center;
-  font-size: 2em;
+  font-size: 1.6em;
   line-height: 0; }
   #player .button {
     color: inherit;
-    text-decoration: none; }
+    text-decoration: none;
+    vertical-align: middle; }
+    #player .button:hover {
+      color: #fff; }
+  #player .play {
+    font-size: 1.3em; }
   #player .component {
     display: inline-block;
     padding: 0.3em; }
-  #player .progress .progress-bar {
-    background: black;
-    width: 256px;
-    height: 0.7em;
-    display: inline-block; }
-    #player .progress .progress-bar div {
-      height: 100%;
-      background: red; }
-  #player .progress .time {
+  #player .progress {
     display: inline-block;
-    padding: 0 0.3em; }
+    margin-left: 1em; }
+    #player .progress .progress-bar {
+      position: relative;
+      width: 400px;
+      height: 0.3em;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer; }
+      #player .progress .progress-bar .bg {
+        border-radius: 4px;
+        background: #111;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1; }
+      #player .progress .progress-bar .bar {
+        position: relative;
+        border-radius: 4px;
+        height: 100%;
+        background: #e81a7b;
+        float: left; }
+      #player .progress .progress-bar .knob {
+        position: absolute;
+        right: -0.2em;
+        background: #fff;
+        border-radius: 50%;
+        width: 0.4em;
+        height: 0.4em;
+        float: left;
+        margin-top: -0.05em; }
+      #player .progress .progress-bar:hover {
+        height: 0.5em; }
+        #player .progress .progress-bar:hover .knob {
+          width: 0.7em;
+          height: 0.7em;
+          margin-top: -0.1em;
+          right: -0.35em; }
+    #player .progress .time {
+      vertical-align: middle;
+      font-size: 0.6em;
+      display: inline-block;
+      padding: 0 0.8em; }

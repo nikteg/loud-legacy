@@ -22,13 +22,15 @@ var RouteHandler = require('react-router').RouteHandler;
 
 var App = React.createClass({displayName: "App",
     render: function() {
-      return (
-          React.createElement("div", null, 
-              React.createElement(Header, null), 
-                  React.createElement(RouteHandler, null), 
-              React.createElement(Player, null)
-          )
-      );
+        return (
+            React.createElement("div", null, 
+                React.createElement(Header, null), 
+                React.createElement("div", {id: "content"}, 
+                    React.createElement(RouteHandler, null)
+                ), 
+                React.createElement(Player, null)
+            )
+        );
     }
 });
 
@@ -57,7 +59,21 @@ var React = require('react');
 var Main = React.createClass({displayName: "Main",
     render: function() {
         return (
-            React.createElement("div", null)
+            React.createElement("div", null, 
+                React.createElement("h1", null, "Si autem id non concedatur, non continuo vita beata tollitur."), 
+
+                React.createElement("p", null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Huius, Lyco, oratione locuples, rebus ipsis ielunior. Illa argumenta propria videamus, cur omnia sint paria peccata. Illis videtur, qui illud non dubitant bonum dicere -; Duo Reges: constructio interrete. Quasi vero, inquit, perpetua oratio rhetorum solum, non etiam philosophorum sit. Eadem nunc mea adversum te oratio est. Id est enim, de quo quaerimus. Quod ea non occurrentia fingunt, vincunt Aristonem; Itaque vides, quo modo loquantur, nova verba fingunt, deserunt usitata. Huius ego nunc auctoritatem sequens idem faciam. "), 
+
+                React.createElement("h2", null, "Sed ad haec, nisi molestum est, habeo quae velim."), 
+
+                React.createElement("p", null, "Consequentia exquirere, quoad sit id, quod volumus, effectum. Negare non possum. Qui ita affectus, beatum esse numquam probabis; Duae sunt enim res quoque, ne tu verba solum putes. Quid ad utilitatem tantae pecuniae? Hinc ceteri particulas arripere conati suam quisque videro voluit afferre sententiam. Tum Piso: Atqui, Cicero, inquit, ista studia, si ad imitandos summos viros spectant, ingeniosorum sunt; Istam voluptatem perpetuam quis potest praestare sapienti? Ut proverbia non nulla veriora sint quam vestra dogmata. Omnes enim iucundum motum, quo sensus hilaretur. "), 
+
+                React.createElement("p", null, "Dic in quovis conventu te omnia facere, ne doleas. Potius inflammat, ut coercendi magis quam dedocendi esse videantur. Vitiosum est enim in dividendo partem in genere numerare. Deinde disputat, quod cuiusque generis animantium statui deceat extremum. Videsne quam sit magna dissensio? "), 
+
+                React.createElement("p", null, "Ad corpus diceres pertinere-, sed ea, quae dixi, ad corpusne refers? Hoc dixerit potius Ennius: Nimium boni est, cui nihil est mali. Quid ergo attinet gloriose loqui, nisi constanter loquare? Cuius quidem, quoniam Stoicus fuit, sententia condemnata mihi videtur esse inanitas ista verborum. "), 
+
+                React.createElement("p", null, "Qui autem esse poteris, nisi te amor ipse ceperit? Cur fortior sit, si illud, quod tute concedis, asperum et vix ferendum putabit? Sed ad haec, nisi molestum est, habeo quae velim. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Cave putes quicquam esse verius. Quod, inquit, quamquam voluptatibus quibusdam est saepe iucundius, tamen expetitur propter voluptatem. Ne amores quidem sanctos a sapiente alienos esse arbitrantur. Cenasti in vita numquam bene, cum omnia in ista Consumis squilla atque acupensere cum decimano. Quid turpius quam sapientis vitam ex insipientium sermone pendere? Haec et tu ita posuisti, et verba vestra sunt. ")
+            )
         );
     }
 });
@@ -74,6 +90,12 @@ var formatTime = function (seconds) {
     return moment(0).second(seconds).format('mm:ss');
 };
 
+var Previous = React.createClass({displayName: "Previous",
+    render: function () {
+        return React.createElement("a", {href: "#", className: "button component previous", onClick: this.props.clickHandler}, React.createElement("i", {className: "icon-step-backward"}));
+    }
+});
+
 var Play = React.createClass({displayName: "Play",
     render: function () {
 
@@ -83,15 +105,26 @@ var Play = React.createClass({displayName: "Play",
     }
 });
 
+var Next = React.createClass({displayName: "Next",
+    render: function () {
+        return React.createElement("a", {href: "#", className: "button component next", onClick: this.props.clickHandler}, React.createElement("i", {className: "icon-step-forward"}));
+    }
+});
+
 var Progress = React.createClass({displayName: "Progress",
     render: function () {
 
         var percentage = this.props.time / this.props.duration * 100;
 
         return (
-            React.createElement("div", {className: "progress component"}, 
+            React.createElement("div", {className: "progress"}, 
                 React.createElement("div", {className: "time"}, formatTime(this.props.time)), 
-                React.createElement("div", {className: "progress-bar", onMouseDown: this.props.clickHandler, ref: "progressBar"}, React.createElement("div", {style: { width: percentage + '%'}})), 
+                React.createElement("div", {className: "progress-bar", onMouseDown: this.props.clickHandler, ref: "progressBar"}, 
+                    React.createElement("div", {className: "bg"}), 
+                    React.createElement("div", {className: "bar", style: { width: percentage + '%'}}, 
+                        React.createElement("div", {className: "knob"})
+                    )
+                ), 
                 React.createElement("div", {className: "time"}, formatTime(this.props.duration))
             )
         );
@@ -106,22 +139,47 @@ var Player = React.createClass({displayName: "Player",
             time: 15
         };
     },
+    componentDidMount: function () {
+        setInterval(this.increaseTime, 1000);
+    },
+    increaseTime: function () {
+        if (this.state.state !== 'playing') return;
+
+        var time = this.state.time;
+        this.setState( { time: ++time % this.state.duration });
+    },
+    previous: function (e) {
+        e.preventDefault();
+
+        console.log('Previous');
+    },
     playPause: function (e) {
         e.preventDefault();
 
         this.setState( { state: this.state.state === 'playing' ? 'paused' : 'playing' });
     },
+    next: function (e) {
+        e.preventDefault();
+
+        console.log('Next');
+    },
     jumpTime: function (e) {
         var left = React.findDOMNode(this.refs.progress.refs.progressBar);
 
-        console.log(left);
+        var percentage = (e.clientX - left.offsetLeft) / left.offsetWidth;
+        var time = this.state.duration * percentage;
+        console.log(percentage, time);
+
+        this.setState( { time: time });
 
         //console.log(left, e.pageX, e.clientX, e.pageX);
     },
     render: function() {
         return (
             React.createElement("div", {id: "player"}, 
+                React.createElement(Previous, {clickHandler: this.previous}), 
                 React.createElement(Play, {state: this.state.state, clickHandler: this.playPause}), 
+                React.createElement(Next, {clickHandler: this.next}), 
                 React.createElement(Progress, {duration: this.state.duration, time: this.state.time, clickHandler: this.jumpTime, ref: "progress"})
             )
         );
@@ -139,13 +197,15 @@ var NotFoundRoute = Router.NotFoundRoute;
 var Route = Router.Route;
 
 var App = require('../components/App');
+var Main = require('../components/Main');
 
 var routes = module.exports = [
-    React.createElement(Route, {path: "/", handler: App}
+    React.createElement(Route, {path: "/", handler: App}, 
+        React.createElement(DefaultRoute, {handler: Main})
     )
 ];
 
-},{"../components/App":2,"react":202,"react-router":33}],7:[function(require,module,exports){
+},{"../components/App":2,"../components/Main":4,"react":202,"react-router":33}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

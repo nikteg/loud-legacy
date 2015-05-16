@@ -9,13 +9,15 @@ var RouteHandler = require('react-router').RouteHandler;
 
 var App = React.createClass({
     render: function() {
-      return (
-          <div>
-              <Header />
-                  <RouteHandler />
-              <Player />
-          </div>
-      );
+        return (
+            <div>
+                <Header />
+                <div id="content">
+                    <RouteHandler />
+                </div>
+                <Player />
+            </div>
+        );
     }
 });
 
