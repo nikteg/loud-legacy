@@ -12,7 +12,9 @@ var App = React.createClass({
         return { player: null };
     },
     componentDidMount: function () {
-        if (window) {
+        if (typeof window !== 'undefined') {
+            console.log('trying');
+
             window.onYouTubeIframeAPIReady = function () {
                 var ytPlayer = new YT.Player('yt-player', {
                     height: '0',

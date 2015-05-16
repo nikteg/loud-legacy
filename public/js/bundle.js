@@ -7,7 +7,7 @@ var Router = require('react-router');
 var routes = require('./routes/coreRoutes.js');
 
 Router.run(routes, Router.HistoryLocation, function(Handler, state) {
-    React.render(React.createElement(Handler, null), document.body);
+    React.render(React.createElement(Handler, null), document.getElementById('react'));
 });
 
 },{"./routes/coreRoutes.js":7,"react":203,"react-router":34}],2:[function(require,module,exports){
@@ -42,7 +42,9 @@ var App = React.createClass({displayName: "App",
         return { player: null };
     },
     componentDidMount: function () {
-        if (window) {
+        if (typeof window !== 'undefined') {
+            console.log('trying');
+
             window.onYouTubeIframeAPIReady = function () {
                 var ytPlayer = new YT.Player('yt-player', {
                     height: '0',
@@ -200,7 +202,7 @@ var Player = React.createClass({displayName: "Player",
         }
     },
     shouldComponentUpdate: function (nextProps) {
-        return (nextProps.player !== undefined);
+        return (nextProps.player !== 'undefined');
     },
     componentWillReceiveProps: function (nextProps) {
         setInterval(this.increaseTime, 500);
@@ -250,7 +252,6 @@ var Player = React.createClass({displayName: "Player",
     render: function() {
         return (
             React.createElement("div", {id: "player"}, 
-                React.createElement("div", {id: "yt-player"}), 
                 React.createElement("div", {className: "title"}, this.getTitle()), 
                 React.createElement(Previous, {clickHandler: this.previous}), 
                 React.createElement(Play, {state: this.state.state, clickHandler: this.playPause}), 

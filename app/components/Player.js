@@ -62,7 +62,7 @@ var Player = React.createClass({
         }
     },
     shouldComponentUpdate: function (nextProps) {
-        return (nextProps.player !== undefined);
+        return (nextProps.player !== 'undefined');
     },
     componentWillReceiveProps: function (nextProps) {
         setInterval(this.increaseTime, 500);
@@ -112,7 +112,6 @@ var Player = React.createClass({
     render: function() {
         return (
             <div id="player">
-                <div id="yt-player"></div>
                 <div className="title">{this.getTitle()}</div>
                 <Previous clickHandler={this.previous} />
                 <Play state={this.state.state} clickHandler={this.playPause} />
