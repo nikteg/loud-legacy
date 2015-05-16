@@ -51,10 +51,18 @@ var Progress = React.createClass({
 var Player = React.createClass({
     getInitialState: function () {
         return {
+            queue: [
+                { title: 'Track 1', duration: 40 },
+                { title: 'Track 2', duration: 20 },
+                { title: 'Track 3', duration: 60 }
+            ],
             state: 'paused',
-            duration: 60,
-            time: 15
+            time: 0,
+            currentTrack: 0
         };
+    },
+    componentWillMount: function () {
+
     },
     componentDidMount: function () {
         setInterval(this.increaseTime, 1000);
@@ -62,13 +70,19 @@ var Player = React.createClass({
     increaseTime: function () {
         if (this.state.state !== 'playing') return;
 
-        var time = this.state.time;
-        this.setState( { time: ++time % this.state.duration });
+        if ((this.state.time + 1) >= this.getCurrentTrack().duration) {
+            this.next();
+        }
+
+        this.setState( { time: (this.state.time + 1) % this.getCurrentTrack().duration });
+    },
+    getCurrentTrack: function () {
+        return this.state.queue[this.state.currentTrack];
     },
     previous: function (e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
 
-        console.log('Previous');
+        this.setState( { currentTrack: (this.state.currentTrack === 0) ? (this.state.queue.length - 1) : (this.state.currentTrack - 1), time: 0 });
     },
     playPause: function (e) {
         e.preventDefault();
@@ -76,28 +90,24 @@ var Player = React.createClass({
         this.setState( { state: this.state.state === 'playing' ? 'paused' : 'playing' });
     },
     next: function (e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
 
-        console.log('Next');
+        this.setState( { currentTrack: (this.state.currentTrack + 1) % this.state.queue.length, time: 0 });
     },
     jumpTime: function (e) {
-        var left = React.findDOMNode(this.refs.progress.refs.progressBar);
+        var bar = React.findDOMNode(this.refs.progress.refs.progressBar);
+        var percentage = (e.clientX - bar.offsetLeft) / bar.offsetWidth;
 
-        var percentage = (e.clientX - left.offsetLeft) / left.offsetWidth;
-        var time = this.state.duration * percentage;
-        console.log(percentage, time);
-
-        this.setState( { time: time });
-
-        //console.log(left, e.pageX, e.clientX, e.pageX);
+        this.setState( { time: this.getCurrentTrack().duration * percentage });
     },
     render: function() {
         return (
             <div id="player">
+                <div className="title">{this.getCurrentTrack().title}</div>
                 <Previous clickHandler={this.previous} />
                 <Play state={this.state.state} clickHandler={this.playPause} />
                 <Next clickHandler={this.next} />
-                <Progress duration={this.state.duration} time={this.state.time} clickHandler={this.jumpTime} ref="progress" />
+                <Progress duration={this.getCurrentTrack().duration} time={this.state.time} clickHandler={this.jumpTime} ref="progress" />
             </div>
         );
     }
