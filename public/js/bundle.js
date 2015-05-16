@@ -38,6 +38,28 @@ var Main = require('./Main');
 var RouteHandler = require('react-router').RouteHandler;
 
 var App = React.createClass({displayName: "App",
+    getInitialState: function () {
+        return { player: null };
+    },
+    componentDidMount: function () {
+        if (window) {
+            window.onYouTubeIframeAPIReady = function () {
+                var ytPlayer = new YT.Player('yt-player', {
+                    height: '0',
+                    width: '0',
+                    videoId: 'GinyJlS4a_c',
+                    events: {
+                        'onReady': window.onPlayerReady,
+                        'onStateChange': window.onPlayerStateChange
+                    }
+                });
+
+                console.log('alive');
+
+                this.setState( { player: ytPlayer });
+            }.bind(this);
+        }
+    },
     render: function() {
         return (
             React.createElement("div", null, 
@@ -45,7 +67,7 @@ var App = React.createClass({displayName: "App",
                 React.createElement("div", {id: "content"}, 
                     React.createElement(RouteHandler, null)
                 ), 
-                React.createElement(Player, null)
+                React.createElement(Player, {player: this.state.player})
             )
         );
     }
@@ -131,8 +153,7 @@ var Previous = React.createClass({displayName: "Previous",
 
 var Play = React.createClass({displayName: "Play",
     render: function () {
-
-        var stateIcon = this.props.state === 'playing' ? 'icon-pause' : 'icon-play';
+        var stateIcon = this.props.state === 1 ? 'icon-pause' : 'icon-play';
 
         return React.createElement("a", {href: "#", className: "button component play", onClick: this.props.clickHandler}, React.createElement("i", {className: stateIcon}));
     }
@@ -167,63 +188,74 @@ var Progress = React.createClass({displayName: "Progress",
 var Player = React.createClass({displayName: "Player",
     getInitialState: function () {
         return {
-            queue: [
-                { title: 'Track 1', duration: 40 },
-                { title: 'Track 2', duration: 20 },
-                { title: 'Track 3', duration: 60 }
-            ],
             state: 'paused',
             time: 0,
-            currentTrack: 0
+            duration: 1
         };
     },
-    componentWillMount: function () {
-
-    },
     componentDidMount: function () {
-        setInterval(this.increaseTime, 1000);
+        if (window) {
+            window.onPlayerReady = this.onPlayerReady;
+            window.onPlayerStateChange = this.onPlayerStateChange;
+        }
+    },
+    shouldComponentUpdate: function (nextProps) {
+        return (nextProps.player !== undefined);
+    },
+    componentWillReceiveProps: function (nextProps) {
+        setInterval(this.increaseTime, 500);
     },
     increaseTime: function () {
-        if (this.state.state !== 'playing') return;
+        if (this.state.state !== 1) return;
 
-        if ((this.state.time + 1) >= this.getCurrentTrack().duration) {
-            this.next();
-        }
-
-        this.setState( { time: (this.state.time + 1) % this.getCurrentTrack().duration });
-    },
-    getCurrentTrack: function () {
-        return this.state.queue[this.state.currentTrack];
+        this.setState( { time: this.props.player.getCurrentTime(), duration: this.props.player.getDuration() } );
     },
     previous: function (e) {
         if (e) e.preventDefault();
 
-        this.setState( { currentTrack: (this.state.currentTrack === 0) ? (this.state.queue.length - 1) : (this.state.currentTrack - 1), time: 0 });
+        //this.setState( { currentTrack: (this.state.currentTrack === 0) ? (this.state.queue.length - 1) : (this.state.currentTrack - 1), time: 0 });
     },
     playPause: function (e) {
         e.preventDefault();
 
-        this.setState( { state: this.state.state === 'playing' ? 'paused' : 'playing' });
+        if (this.state.state == YT.PlayerState.PLAYING) {
+            this.props.player.pauseVideo();
+        } else {
+            this.props.player.playVideo();
+        }
     },
     next: function (e) {
         if (e) e.preventDefault();
 
-        this.setState( { currentTrack: (this.state.currentTrack + 1) % this.state.queue.length, time: 0 });
+        //this.setState( { currentTrack: (this.state.currentTrack + 1) % this.state.queue.length, time: 0 });
     },
     jumpTime: function (e) {
+        e.preventDefault();
+
         var bar = React.findDOMNode(this.refs.progress.refs.progressBar);
         var percentage = (e.clientX - bar.offsetLeft) / bar.offsetWidth;
 
-        this.setState( { time: this.getCurrentTrack().duration * percentage });
+        this.props.player.seekTo(this.state.duration * percentage);
+    },
+    getTitle: function () {
+        return 'Track title';
+    },
+    onPlayerReady: function (player) {
+        console.log('Player ready', player);
+    },
+    onPlayerStateChange: function (state) {
+        this.setState( { state: state.data });
+        console.log('Player state changed', state.data);
     },
     render: function() {
         return (
             React.createElement("div", {id: "player"}, 
-                React.createElement("div", {className: "title"}, this.getCurrentTrack().title), 
+                React.createElement("div", {id: "yt-player"}), 
+                React.createElement("div", {className: "title"}, this.getTitle()), 
                 React.createElement(Previous, {clickHandler: this.previous}), 
                 React.createElement(Play, {state: this.state.state, clickHandler: this.playPause}), 
                 React.createElement(Next, {clickHandler: this.next}), 
-                React.createElement(Progress, {duration: this.getCurrentTrack().duration, time: this.state.time, clickHandler: this.jumpTime, ref: "progress"})
+                React.createElement(Progress, {duration: this.state.duration, time: this.state.time, clickHandler: this.jumpTime, ref: "progress"})
             )
         );
     }
