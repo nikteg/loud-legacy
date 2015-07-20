@@ -1,48 +1,50 @@
-/** @jsx React.DOM */
+import React from 'react'
+import Header from './Header'
+import Player from './Player'
+import Main from './Main'
 
-var React = require('react');
-var Header = require('./Header');
-var Player = require('./Player');
-var Main = require('./Main');
+import { RouteHandler } from 'react-router'
 
-var RouteHandler = require('react-router').RouteHandler;
+class App extends React.Component {
+  constructor(props) {
+    super(props)
 
-var App = React.createClass({
-    getInitialState: function () {
-        return { player: null };
-    },
-    componentDidMount: function () {
-        if (typeof window !== 'undefined') {
-            console.log('trying');
-
-            window.onYouTubeIframeAPIReady = function () {
-                var ytPlayer = new YT.Player('yt-player', {
-                    height: '0',
-                    width: '0',
-                    videoId: 'GinyJlS4a_c',
-                    events: {
-                        'onReady': window.onPlayerReady,
-                        'onStateChange': window.onPlayerStateChange
-                    }
-                });
-
-                console.log('alive');
-
-                this.setState( { player: ytPlayer });
-            }.bind(this);
-        }
-    },
-    render: function() {
-        return (
-            <div>
-                <Header />
-                <div id="content">
-                    <RouteHandler />
-                </div>
-                <Player player={this.state.player} />
-            </div>
-        );
+    this.state = {
+      player: null
     }
-});
+  }
 
-module.exports = App;
+  /*
+  The global window variable can be used here as componentDidMount will ONLY
+  be called on the client side and not when the server renders the component.
+  */
+  componentDidMount() {
+    window.onYouTubeIframeAPIReady = () => {
+      let ytPlayer = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: 'GinyJlS4a_c',
+        events: {
+          'onReady': window.onPlayerReady,
+          'onStateChange': window.onPlayerStateChange
+        }
+      })
+
+      this.setState( { player: ytPlayer })
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <Header />
+        <div id="content">
+          <RouteHandler />
+        </div>
+        <Player player={this.state.player} />
+      </div>
+    )
+  }
+}
+
+export default App

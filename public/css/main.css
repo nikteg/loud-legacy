@@ -1,5 +1,5 @@
 body {
-  font: 14px/1.5em 'Roboto', sans-serif;
+  font: 14px/1.5em "Roboto", sans-serif;
   background-image: radial-gradient(circle at top center, #e81a7b, #f06d06);
   padding-bottom: 4.6em; }
 
@@ -28,7 +28,7 @@ body {
         font-size: 1.3em; }
         #header .nav li a .logo {
           display: inline-block;
-          text-shadow: 0 .15em 0.2em black;
+          text-shadow: 0 0.15em 0.2em black;
           font-size: 2em;
           padding: 0.2em 0;
           font-weight: bold;

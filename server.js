@@ -1,33 +1,29 @@
-var React = require('react');
-var Router = require('react-router');
-var express = require('express');
-var favicon = require('serve-favicon');
-var bodyParser = require('body-parser');
-var path = require('path');
-var app = express();
+import React from 'react'
+import Router from 'react-router'
+import express from 'express'
+import bodyParser from 'body-parser'
+import path from 'path'
+import livereload from 'connect-livereload'
 
-require('node-jsx').install();
+let server = express()
 
-// uncomment after placing your favicon in /public
-app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(bodyParser.json()); // get information from html forms
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+server.use(bodyParser.json()) // get information from html forms
+server.use(bodyParser.urlencoded({ extended: true }))
+server.use(express.static(path.join(__dirname, 'public')))
+server.use(livereload({ port: 35729 }))
 
-app.use(require('connect-livereload')({ port: 35729 }));
+server.set('views', path.join(__dirname, 'views'))
+server.set('view engine', 'ejs') // set up ejs for templating
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs'); // set up ejs for templating
+import { routes } from './app'
 
-var routes = require('./app/routes/coreRoutes.js');
+server.use((req, res, next) => {
+    var router = Router.create({ location: req.url, routes: routes })
+    router.run((Handler, state) => {
+        var html = React.renderToString(React.createElement(Handler))
 
-app.use(function(req, res, next) {
-    var router = Router.create({ location: req.url, routes: routes });
-    router.run(function(Handler, state) {
-        var html = React.renderToString(React.createElement(Handler));
+        return res.render('index', { content: html })
+    })
+})
 
-        return res.render('index', { content: html });
-    });
-});
-
-module.exports = app;
+export default server

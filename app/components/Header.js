@@ -1,29 +1,26 @@
-/** @jsx React.DOM */
+import React from 'react'
+import { Link } from 'react-router'
 
-var React = require('react');
+class Header extends React.Component {
+  render() {
+    return (
+      <header id="header">
+        <ul className="nav">
+          <li>
+            <Link to="profile">Profile</Link>
+          </li>
+          <li>
+            <Link to="main">
+              <span className="logo">Loud<span className="beta">BETA</span></span>
+            </Link>
+          </li>
+          <li>
+            <Link to="about">About</Link>
+          </li>
+        </ul>
+      </header>
+    )
+  }
+}
 
-var Link = require('react-router').Link;
-
-var Header = React.createClass({
-    render: function() {
-        return (
-            <header id="header">
-                <ul className="nav">
-                    <li>
-                        <Link to="profile">Profile</Link>
-                    </li>
-                    <li>
-                        <Link to="main">
-                            <span className="logo">Loud<span className="beta">BETA</span></span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="about">About</Link>
-                    </li>
-                </ul>
-            </header>
-        );
-    }
-});
-
-module.exports = Header;
+export default Header
