@@ -70,6 +70,9 @@ class Player extends React.Component {
   componentDidMount() {
     window.onPlayerReady = this.onPlayerReady
     window.onPlayerStateChange = this.onPlayerStateChange
+    window.addEventListener('keydown', (e) => {
+      if (e.keyCode === 32) this.playPause(e)
+    })
   }
 
   shouldComponentUpdate(nextProps) {
@@ -118,7 +121,7 @@ class Player extends React.Component {
   }
 
   getTitle = () => {
-    return 'Track title'
+    return 'Red Roses'
   }
 
   onPlayerReady = (player) => {
